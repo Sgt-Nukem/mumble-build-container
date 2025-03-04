@@ -92,7 +92,6 @@ RUN ./configure -confirm-license -opensource -v \
 	-skip qtxmlpatterns \
 	-no-gui \
 	-no-widgets \
-	-no-dbus \
 	-no-strip \
 	-openssl-linked \
 	-I /static-prefix/include \
