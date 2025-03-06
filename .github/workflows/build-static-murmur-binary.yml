@@ -47,7 +47,9 @@ jobs:
       run: |
         archive_name="murmur-static-x64-v1.5.735.tar.bz2"
         echo "RELEASE_ARCHIVE_NAME=$archive_name" >> $GITHUB_ENV
-        tar -cjvf "$archive_name" -C dist . --transform 's|^|murmur-static-x64-v1.5.735/|'
+        mv "dist/mumble-server.ini"  "dist/murmur.ini"
+        mv "dist/murmur.x86_64"      "dist/murmur.x64"
+        tar -cjvf "$archive_name" -C dist murmur.x64 murmur.ini LICENSE --transform 's|^|murmur-static-x64-v1.5.735/|'
 
     - name: Create GitHub release
       id: create_release
@@ -68,5 +70,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ env.RELEASE_ARCHIVE_NAME }}
-        asset_name: "murmur-static-x64-v1.5.735.tar.bz2"
+        asset_name: ${{ env.RELEASE_ARCHIVE_NAME }}
         asset_content_type: application/x-tar
