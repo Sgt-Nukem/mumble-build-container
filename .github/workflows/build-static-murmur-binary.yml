@@ -47,9 +47,7 @@ jobs:
       run: |
         archive_name="murmur-static-x64-v1.5.735.tar.bz2"
         echo "RELEASE_ARCHIVE_NAME=$archive_name" >> $GITHUB_ENV
-        mv "dist/mumble-server.ini"  "dist/murmur.ini"
-        mv "dist/murmur.x86_64"      "dist/murmur.x64"
-        tar -cjvf "$archive_name" -C dist murmur.x64 murmur.ini LICENSE --transform 's|^|murmur-static-x64-v1.5.735/|'
+        tar -cjvf "$archive_name" -C dist murmur.x86_64 mumble-server.ini LICENSE --transform 's|^|murmur-static-x64-v1.5.735/|' --transform 's|murmur.x86_64|murmur.x64|' --transform 's|mumble-server.ini|murmur.ini|' --show-transformed
 
     - name: Create GitHub release
       id: create_release
