@@ -37,8 +37,36 @@ jobs:
     - name: Upload Murmur static binary and murmur.ini
       uses: actions/upload-artifact@v4
       with:
-        name: murmur-static
+        name: murmur-static-x64-v1.5.735
         path: |
           dist/murmur.x86_64
           dist/murmur.ini
           dist/LICENSE
+
+    - name: Create release archives
+      run: |
+        archive_name="murmur-static-x64-v1.5.735.tar.bz2"
+        echo "RELEASE_ARCHIVE_NAME=$archive_name" >> $GITHUB_ENV
+        tar -cjvf "$archive_name" -C dist . --transform 's|^|murmur-static-x64-v1.5.735/|'
+
+    - name: Create GitHub release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "v1.5.735"
+        release_name: "v1.5.735"
+        body: "murmur-static-x64 | Mumble Server for Linux (statically linked) | v1.5.735"
+        draft: false
+        prerelease: false
+
+    - name: Upload b2zipped tarball to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.RELEASE_ARCHIVE_NAME }}
+        asset_name: "murmur-static-x64-v1.5.735"
+        asset_content_type: application/x-tar
